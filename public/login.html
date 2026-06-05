@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/login.css">
+    <title>Fazer login</title>
+</head>
+
+<body>
+    <h1>Agenda</h1>
+    <main class="trocado">
+        <h2>Fazer login</h2>
+        <div class="aviso-erro" id="aviso-erro" class="display-none"></div>
+        <form>
+            <label>
+                Nome do usuário:
+                <input>
+            </label>
+            <label>
+                Senha:
+                <input type="password">
+            </label>
+            <button type="submit" class="destaque">
+                Fazer login
+            </button>
+            <small>Não tem uma conta? <a class="troca" href="#">Criar conta</a></small>
+        </form>
+    </main>
+    <main class="display-none trocado">
+         <h2>Criar conta</h2>
+        <div class="aviso-erro" id="aviso-erro" class="display-none"></div>
+        <form>
+            <label>
+                Nome do usuário:
+                <input type="text">
+            </label>
+            <label>
+                Senha:
+                <input type="password">
+            </label>
+            <label>
+                Confirmar senha:
+                <input type="password">
+            </label>
+            <button type="submit" class="destaque">
+                Criar conta
+            </button>
+            <small>Já tem uma conta? <a class="troca" href="#">Fazer login</a></small>
+        </form>
+    </main>
+
+    <script src="scripts/login.js"></script>
+</body>
+
+</html>

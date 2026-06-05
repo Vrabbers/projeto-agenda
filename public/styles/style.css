@@ -1,0 +1,114 @@
+* {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+}
+
+body {
+    min-height: 100vh;
+}
+
+header {
+    background-color: green;
+    color: white;
+    display: grid;
+    grid-template-columns: auto auto;
+    padding: 20px;
+    align-items: center;
+}
+
+h1 a {
+    text-decoration: none;
+    color: white;
+    font-weight: normal;
+}
+
+#user-box {
+    justify-self: end;
+}
+
+
+nav {
+    grid-column: span 2;
+    margin-top: 10px;
+    justify-self: center;
+}
+
+nav ul {
+    display: flex;
+    padding: 0;
+    gap: 10px;
+}
+
+nav li {
+    list-style: none;
+}
+
+nav li:not(:first-child)::before {
+    content: '·';
+    margin-right: 10px;
+}
+
+nav a {
+    color: white;
+}
+
+nav a:current {
+    text-decoration: none;
+}
+
+a.botao, button {
+    text-decoration: none;
+    color: black;
+    background: rgb(255, 255, 255);
+    display: inline-block;
+    padding: 5px 10px;
+    border: 1px solid rgba(0, 0, 0, 0.473);
+    border-radius: 10px;
+    font-size: 12pt;
+}
+
+a.botao:hover, button:hover {
+    background: rgb(204, 204, 204);
+}
+
+.destaque {
+    background-color: rgb(0, 74, 172);
+    color: white;
+    border-color: transparent;
+}
+
+.destaque:hover {
+    background-color: rgb(0, 49, 112);
+}
+
+.display-none {
+    display: none;
+}
+
+main {
+    padding: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 350px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+input {
+    font-size: 16px;
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.493);
+}
+
+form button {
+    margin-top: 10px;
+}
