@@ -13,15 +13,15 @@
     <h1>Agenda</h1>
     <main>
         <div class="aviso-erro display-none" id="aviso-erro"></div>
-        <form id="login-form">
+        <form id="login-form" action="/login" method="POST">
             <h2>Fazer login</h2>
             <label>
                 Nome do usuário:
-                <input>
+                <input maxlength="40" name="nome">
             </label>
             <label>
                 Senha:
-                <input type="password">
+                <input type="password" name="senha">
             </label>
             <button type="submit" class="destaque">
                 Fazer login
@@ -32,7 +32,7 @@
             <h2>Criar conta</h2>
             <label>
                 Nome do usuário:
-                <input type="text">
+                <input maxlength="40" type="text">
             </label>
             <label>
                 Senha:

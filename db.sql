@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS usuario (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(40) UNIQUE CHECK (nome REGEXP '[\w\d]+'),
+    nome VARCHAR(40) UNIQUE,
     senha VARCHAR(255)
 );
