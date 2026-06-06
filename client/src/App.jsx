@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Login } from './Login';
+import { Login } from './Login.jsx';
+import { Registrar } from './Registrar.jsx';
 
 // 1. Define your page components
 function Home() {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
     {
         path: "/login",
         element: <Login />
+    },
+    {
+        path: "/registrar",
+        element: <Registrar />
     }
 ]);
 
