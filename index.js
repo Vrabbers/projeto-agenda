@@ -8,6 +8,8 @@ import path from "node:path";
 import bcrypt from "bcrypt";
 import { pinoHttp } from "pino-http";
 
+import { regenerateAsync, saveAsync } from "./src/session-promise.js";
+
 try {
     process.loadEnvFile();
 } catch (error) {
@@ -17,7 +19,6 @@ try {
 }
 
 const port = process.env.PORT || 3000;
-
 const app = express();
 
 app.set("trust proxy", 1)
@@ -30,13 +31,9 @@ app.use(pinoHttp({
         }
     }
 }));
-
 app.use(compression());
-
 app.use(helmet());
-
 app.use(express.urlencoded({ extended: false }));
-
 app.use(express.json());
 
 const db = await mysql2.createPool(process.DB_URL || {
@@ -46,7 +43,6 @@ const db = await mysql2.createPool(process.DB_URL || {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
 });
-
 
 const sessionStore = new (MySQLStore(session))({
     expiration: 3600000,
@@ -88,36 +84,17 @@ app.post('/api/login', async (req, res, next) => {
         return;
     }
 
-    req.session.regenerate((err) => {
-        if (err) {
-            next(err);
-        }
-
-        req.session.user = { nome: nome, id: id };
-
-        req.session.save((err) => {
-            if (err) {
-                next(err);
-            } else {
-                res.redirect('/');
-            }
-        });
-    })
+    await regenerateAsync(req.session);
+    req.session.user = { nome: nome, id: id };
+    await saveAsync(req.session);
+    res.redirect('/');
 });
 
 app.get('/api/logout', async (req, res, next) => {
     req.session.user = null;
-    req.session.save((err) => {
-        if (err)
-            next(err);
-
-        req.session.regenerate((err) => {
-            if (err)
-                next(err);
-            res.redirect('/');
-        })
-    })
-
+    await saveAsync(req.session);
+    await regenerateAsync(req.session);
+    res.redirect('/');
 });
 
 app.post("/api/registrar", async (req, res, next) => {
@@ -137,21 +114,13 @@ app.post("/api/registrar", async (req, res, next) => {
 
     const { id } = vals[0];
 
-    req.session.regenerate((err) => {
-        if (err) {
-            next(err);
-        }
+    await regenerateAsync(req.session);
 
-        req.session.user = { nome: nome, id: id };
+    req.session.user = { nome: nome, id: id };
 
-        req.session.save((err) => {
-            if (err) {
-                next(err);
-            } else {
-                res.redirect('/');
-            }
-        });
-    })
+    await saveAsync(req.session);
+
+    res.redirect("/");
 });
 
 app.get("/api/whoami", isAuthenticated, (req, res, next) => {
