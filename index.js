@@ -17,9 +17,10 @@ try {
 }
 
 const port = process.env.PORT || 3000;
-const publicPath = path.join(import.meta.dirname, "public");
 
 const app = express();
+
+app.set("trust proxy", 1)
 
 app.use(pinoHttp({
     transport: {
@@ -30,16 +31,15 @@ app.use(pinoHttp({
     }
 }));
 
-
 app.use(compression());
+
 app.use(helmet());
+
 app.use(express.urlencoded({ extended: false }));
+
 app.use(express.json());
-app.use(express.static(publicPath));
 
-app.set("trust proxy", 1)
-
-const db = await mysql2.createConnection(process.DB_URL || {
+const db = await mysql2.createPool(process.DB_URL || {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     user: process.env.DB_USER,
@@ -62,11 +62,6 @@ app.use(session({
     cookie: { maxAge: 3600000, secure: "auto", sameSite: true }
 }))
 
-app.use((req, res, next) => {
-    res.type("json");
-    next();
-});
-
 function isAuthenticated(req, res, next) {
     if (req.session.user)
         next()
@@ -74,7 +69,7 @@ function isAuthenticated(req, res, next) {
         res.sendStatus(401);
 }
 
-app.post('/login', async (req, res, next) => {
+app.post('/api/login', async (req, res, next) => {
     const [vals] = await db.execute(
         "SELECT id, nome, senha FROM usuario WHERE nome = ?",
         [req.body.nome.trim()]
@@ -110,7 +105,7 @@ app.post('/login', async (req, res, next) => {
     })
 });
 
-app.get('/logout', async (req, res, next) => {
+app.get('/api/logout', async (req, res, next) => {
     req.session.user = null;
     req.session.save((err) => {
         if (err)
@@ -125,7 +120,7 @@ app.get('/logout', async (req, res, next) => {
 
 });
 
-app.post("/registrar", async (req, res, next) => {
+app.post("/api/registrar", async (req, res, next) => {
     const { nome, senha } = req.body;
 
     if (nome.trim() === "" || senha === "") {
@@ -159,7 +154,7 @@ app.post("/registrar", async (req, res, next) => {
     })
 });
 
-app.get("/whoami", isAuthenticated, (req, res, next) => {
+app.get("/api/whoami", isAuthenticated, (req, res, next) => {
     res.send(
         JSON.stringify(
             {
@@ -169,15 +164,30 @@ app.get("/whoami", isAuthenticated, (req, res, next) => {
     );
 });
 
+const distPath = path.join(import.meta.dirname, "client/dist");
+app.use(express.static(distPath));
+app.get("/*splat", (req, res) => {
+    res.sendFile(path.join(distPath, "index.html"));
+})
+
+const publicPath = path.join(import.meta.dirname, "client/public");
+app.use(express.static(publicPath));
+
 app.use((err, req, res, next) => {
     res.sendStatus(500);
     console.error(err);
 })
 
-app.listen(port, (error) => {
+const server = app.listen(port, (error) => {
     if (error) {
         console.error(error);
     } else {
         console.log("Aberto em http://localhost:" + port);
     }
 });
+
+process.on("SIGTERM", () => {
+    server.close();
+    db.end();
+    process.exit();
+})
