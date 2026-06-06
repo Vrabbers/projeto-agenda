@@ -17,30 +17,30 @@
             <h2>Fazer login</h2>
             <label>
                 Nome do usuário:
-                <input maxlength="40" name="nome">
+                <input maxlength="40" name="nome" pattern="[\w\d]+" required>
             </label>
             <label>
                 Senha:
-                <input type="password" name="senha">
+                <input type="password" name="senha" required>
             </label>
             <button type="submit" class="destaque">
                 Fazer login
             </button>
             <small>Não tem uma conta? <a href="#registrar">Criar conta</a></small>
         </form>
-        <form class="display-none" id="registrar-form">
+        <form class="display-none" id="registrar-form" action="/registrar" method="POST">
             <h2>Criar conta</h2>
             <label>
                 Nome do usuário:
-                <input maxlength="40" type="text">
+                <input maxlength="40" type="text" name="nome" pattern="[\w\d]+" required>
             </label>
             <label>
                 Senha:
-                <input type="password">
+                <input type="password" name="senha" required>
             </label>
             <label>
                 Confirmar senha:
-                <input type="password">
+                <input type="password" id="senha-repete" required>
             </label>
             <button type="submit" class="destaque">
                 Criar conta
@@ -49,6 +49,7 @@
         </form>
     </main>
 
+    <script src="scripts/auth.js"></script>
     <script src="scripts/login.js"></script>
 </body>
 

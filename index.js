@@ -63,7 +63,8 @@ app.use(session({
     cookie: { maxAge: 3600000, secure: "auto", sameSite: true }
 }))
 
-app.use((req, _res, next) => {
+app.use((req, res, next) => {
+    res.type("json");
     next();
 });
 
@@ -73,11 +74,6 @@ function isAuthenticated(req, res, next) {
     else
         res.sendStatus(401);
 }
-
-app.get('/test', isAuthenticated, (req, res) => {
-    res.send('hello, ' + (JSON.stringify(req.session.user)) + '!' +
-        ' <a href="/logout">Logout</a>')
-})
 
 app.post('/login', async (req, res, next) => {
     const [vals] = await db.execute(
@@ -109,7 +105,7 @@ app.post('/login', async (req, res, next) => {
             if (err) {
                 next(err);
             } else {
-                res.redirect('/test');
+                res.redirect('/');
             }
         });
     })
@@ -118,17 +114,66 @@ app.post('/login', async (req, res, next) => {
 app.get('/logout', async (req, res, next) => {
     req.session.user = null;
     req.session.save((err) => {
-        if (err) 
+        if (err)
             next(err);
 
-        req.session.regenerate((err) =>{
-            if (err) 
+        req.session.regenerate((err) => {
+            if (err)
                 next(err);
             res.redirect('/');
         })
     })
 
 });
+
+app.post("/registrar", async (req, res, next) => {
+    const { nome, senha } = req.body;
+
+    if (nome.trim() === "" || senha === "") {
+        res.sendStatus(400);
+        return;
+    }
+
+    const hash = await bcrypt.hash(senha, 10);
+
+    const [vals] = await db.execute(
+        "INSERT INTO agenda.usuario (nome, senha) VALUES (?, ?) RETURNING id",
+        [nome, hash]
+    );
+
+    const { id } = vals[0];
+
+    req.session.regenerate((err) => {
+        if (err) {
+            next(err);
+        }
+
+        req.session.user = { nome: nome, id: id };
+
+        req.session.save((err) => {
+            if (err) {
+                next(err);
+            } else {
+                res.redirect('/');
+            }
+        });
+    })
+});
+
+app.get("/whoami", isAuthenticated, (req, res, next) => {
+    res.send(
+        JSON.stringify(
+            {
+                id: req.session.user.id,
+                nome: req.session.user.nome
+            })
+    );
+});
+
+app.use((err, req, res, next) => {
+    res.sendStatus(500);
+    console.error(err);
+})
 
 app.listen(port, (error) => {
     if (error) {
