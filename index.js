@@ -8,7 +8,6 @@ import path from "node:path";
 import bcrypt from "bcrypt";
 import { pinoHttp } from "pino-http";
 
-
 try {
     process.loadEnvFile();
 } catch (error) {

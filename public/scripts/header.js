@@ -1,15 +1,26 @@
+import { whoAmI } from "./modules/auth.js";
+
 const userBox = document.querySelector("#user-box");
 (async () => {
     const user = await whoAmI();
     if (user) {
         userBox.childNodes.forEach(x => x.remove());
-        userBox.innerHTML = `${user.nome}<br><a class="sair" href="/logout">Sair</a>`
+        const a = document.createElement("a");
+        a.href="/logout";
+        a.className = "sair";
+        a.textContent = "Sair";
+        userBox.append(
+            document.createTextNode(user.nome),
+            document.createElement("br"),
+            a
+        );
     }
 
     if (user) {
-        document.querySelector("#div-conteudo-auth").classList.remove("display-none");
+        document.querySelectorAll(".auth").forEach(x => x.classList.remove("display-none"));
+        document.querySelectorAll(".noauth").forEach(x => x.classList.add("display-none"));
     } else {
-        document.querySelector("#div-conteudo-nao-auth").classList.remove("display-none");
-        document.querySelector("nav").classList.add("display-none")
+        document.querySelectorAll(".noauth").forEach(x => x.classList.remove("display-none"));
+        document.querySelectorAll(".auth").forEach(x => x.classList.add("display-none"));
     }
 })();

@@ -1,3 +1,5 @@
+import { whoAmI } from "./modules/auth.js";
+
 const loginForm = document.querySelector("#login-form");
 const registrarForm = document.querySelector("#registrar-form");
 const avisoErro = document.querySelector("#aviso-erro");
@@ -43,6 +45,7 @@ registrarForm["senha-repete"].addEventListener("input", (e) => {
 });
 
 whoAmI().then((u) => {
-    if (u !== null)
+    if (u !== null) {
         window.location.pathname = '/';
+    }
 });
