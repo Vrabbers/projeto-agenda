@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import './styles/login.css';
+import '../styles/login.css';
+import { Link } from 'react-router-dom';
 
 export function RegistrarPage() {
-    const [erro, setErro] = useState("");
+    const [erro, setErro] = useState(null);
     return (
         <div className='login-container'>
             <main className='login'>
-                {erro === "" ? null : <div className="aviso-erro">{erro}</div>}
+                {erro && <div className="aviso-erro">{erro}</div>}
                 <form action="/api/registrar" method="POST">
                     <h2>Criar conta</h2>
                     <label>
@@ -24,7 +25,7 @@ export function RegistrarPage() {
                     <button type="submit" className="destaque">
                         Criar conta
                     </button>
-                    <small>Já tem uma conta? <a href="/login">Fazer login</a></small>
+                    <small>Já tem uma conta? <Link to="/login">Fazer login</Link></small>
                 </form>
             </main>
         </div>

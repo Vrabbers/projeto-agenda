@@ -29,14 +29,14 @@ h1 a {
     font-weight: normal;
 }
 
-#user-box {
+.user-box {
     justify-self: end;
     text-align: end;
     font-weight: bold;
 }
 
-#user-box a.sair {
-    color: white;
+.user-box a {
+    color: inherit  ;
     font-weight: normal;
 }
 

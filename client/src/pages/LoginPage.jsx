@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import './styles/login.css';
+import '../styles/login.css';
+import { Link } from 'react-router-dom';
 
 export function LoginPage() {
-    const [erro, setErro] = useState("");
+    const [erro, setErro] = useState(null);
     return (
         <div className='login-container'>
             <main className="login">
-                {erro === "" ? null : <div className="aviso-erro">{erro}</div>}
+                {erro && <div className="aviso-erro">{erro}</div>}
                 <form id="login-form" action="/api/login" method="POST">
                     <h2>Fazer login</h2>
                     <label>
@@ -20,7 +21,7 @@ export function LoginPage() {
                     <button type="submit" className="destaque">
                         Fazer login
                     </button>
-                    <small>Não tem uma conta? <a href="/registrar">Criar conta</a></small>
+                    <small>Não tem uma conta? <Link to="/registrar">Criar conta</Link></small>
                 </form>
             </main>
         </div>
