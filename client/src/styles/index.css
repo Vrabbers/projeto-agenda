@@ -21,6 +21,12 @@ header {
     grid-template-columns: auto auto;
     padding: 20px;
     align-items: center;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.425);
+}
+
+main {
+    padding: 20px;
+    flex-grow: 1;
 }
 
 h1 a {
@@ -85,18 +91,14 @@ a.botao:hover, button:hover {
     background: rgb(204, 204, 204);
 }
 
-.destaque {
+a.destaque, button.destaque {
     background-color: rgb(0, 74, 172);
     color: white;
     border-color: transparent;
 }
 
-.destaque:hover {
+a.destaque:hover, button.destaque:hover {
     background-color: rgb(0, 49, 112);
-}
-
-main {
-    padding: 20px;
 }
 
 form {
@@ -121,4 +123,11 @@ input {
 
 form button {
     margin-top: 10px;
+}
+
+a.main-a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
 }

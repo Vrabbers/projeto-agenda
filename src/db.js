@@ -1,6 +1,7 @@
+import 'dotenv/config';
 import mysql2 from "mysql2/promise";
 
-export function createDbPool() {
+function createDbPool() {
     return mysql2.createPool(process.DB_URL || {
         host: process.env.DB_HOST,
         port: process.env.DB_PORT,
@@ -9,3 +10,5 @@ export function createDbPool() {
         database: process.env.DB_DATABASE,
     });
 }
+
+export const db = createDbPool();

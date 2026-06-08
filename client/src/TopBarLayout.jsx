@@ -6,27 +6,31 @@ export function TopBarLayout() {
 
     return <>
         <header>
-            <h1><Link to="/"><img src="/img/event_available.svg" width="24" /> Agenda</Link></h1>
+            <h1><Link to="/" className="main-a"><img src="/img/event_available.svg" width="28" /> Agenda Compartilhada</Link></h1>
             <div className="user-box">
                 {
-                    isAuth(auth) && 
+                    isAuth(auth) &&  (
                         <>
                             {(auth.nome)}
                             <br />
                             <a href="/api/logout">Sair</a>
                         </>
+                    )
                 }
                 {
-                    isNotAuth(auth) &&
-                    <Link to="/login" className="botao">Fazer login</Link>
+                    isNotAuth(auth) && <Link to="/login" className="botao">Fazer login</Link>
                 }
             </div>
-            <nav className="auth">
-                <ul>
-                    <li><NavLink to="/ver-eventos">Ver eventos</NavLink></li>
-                    <li><NavLink to="/criar-evento">Criar evento</NavLink></li>
-                </ul>
-            </nav>
+            {
+                isAuth(auth) && (
+                    <nav className="auth">
+                        <ul>
+                            <li><NavLink to="/ver-eventos">Ver eventos</NavLink></li>
+                            <li><NavLink to="/criar-evento">Criar evento</NavLink></li>
+                        </ul>
+                    </nav>
+                )
+            }
         </header>
         <main>
             <Outlet />
