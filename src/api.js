@@ -73,7 +73,7 @@ apiRouter.post("/registrar", async (req, res) => {
     const hash = await bcrypt.hash(senha, hashRounds);
 
     await db.execute(
-        "INSERT INTO agenda.usuario (id, nome, senha) VALUES (?, ?, ?)",
+        "INSERT INTO usuario (id, nome, senha) VALUES (?, ?, ?)",
         [id, nome, hash]
     );
 
