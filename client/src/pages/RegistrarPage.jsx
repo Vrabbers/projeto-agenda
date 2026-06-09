@@ -1,14 +1,52 @@
 import { useState } from 'react';
 import '../styles/login.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { post } from '../fetch-helper';
+import { useAuth } from '../auth-context';
+import { useRef } from 'react';
 
 export function RegistrarPage() {
     const [erro, setErro] = useState(null);
+    const reauth = useAuth()[1];
+    const nav = useNavigate();
+
+    const onSubmit = async (e) => {
+        const form = e.target;
+
+        if (!form.reportValidity()) {
+            e.preventDefault();
+            return;
+        }
+        e.preventDefault();
+
+        const res = await post("/api/registrar", new FormData(form));
+
+        if (!res.ok) {
+            form["senha"].value = "";
+            form["senha-repete"].value = "";
+            setErro(res.status === 400 ? (await res.json()).error : "Ocorreu algum erro");
+            return;
+        } else {
+            nav("/");
+            reauth();
+        }
+    };
+
+    const senhaRef = useRef(null);
+    const onSenhaRepeteChange = (e) => {
+        const senhaRepete = e.target;
+        senhaRepete.setCustomValidity("");
+        if (senhaRepete.value !== senhaRef.current.value) {
+            senhaRepete.setCustomValidity("Senhas não são iguais.");
+        }
+        senhaRepete.reportValidity();
+    };
+    
     return (
         <div className='login-container'>
             <main className='login'>
                 {erro && <div className="aviso-erro">{erro}</div>}
-                <form action="/api/registrar" method="POST">
+                <form onSubmit={onSubmit}>
                     <h2>Criar conta</h2>
                     <label>
                         Nome do usuário:
@@ -16,11 +54,11 @@ export function RegistrarPage() {
                     </label>
                     <label>
                         Senha:
-                        <input type="password" name="senha" required />
+                        <input type="password" name="senha" ref={senhaRef} required />
                     </label>
                     <label>
                         Confirmar senha:
-                        <input type="password" required />
+                        <input type="password" id="repete-senha" onInput={onSenhaRepeteChange} required />
                     </label>
                     <button type="submit" className="destaque">
                         Criar conta

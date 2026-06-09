@@ -15,7 +15,7 @@ const app = express();
 
 app.set("trust proxy", 1)
 
-app.use(morgan("combined"));
+app.use(morgan("dev"));
 app.use(compression());
 app.use(helmet());
 app.use(express.urlencoded({ extended: false }));

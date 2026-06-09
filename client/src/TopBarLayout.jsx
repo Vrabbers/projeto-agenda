@@ -1,8 +1,13 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { isAuth, isNotAuth, useAuth } from "./auth-context";
 
+const notAuthPage = <>
+    <p>Primeiro, vamos fazer login.</p>
+    <Link to="/login" className="botao destaque">Fazer login</Link>
+</>;
+
 export function TopBarLayout() {
-    const auth = useAuth();
+    const [auth] = useAuth();
 
     return <>
         <header>
@@ -33,7 +38,9 @@ export function TopBarLayout() {
             }
         </header>
         <main>
-            <Outlet />
+            {
+                (isAuth(auth) && <Outlet />) || (isNotAuth(auth) && notAuthPage) 
+            }
         </main>
     </>;
 }

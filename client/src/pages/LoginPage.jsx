@@ -1,14 +1,40 @@
 import { useState } from 'react';
 import '../styles/login.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { post } from '../fetch-helper';
+import { useAuth } from '../auth-context';
 
 export function LoginPage() {
     const [erro, setErro] = useState(null);
+    const reauth = useAuth()[1];
+    const nav = useNavigate();
+
+    const onSubmit = async (e) => {
+        const form = e.target;
+
+        if (!form.reportValidity()) {
+            e.preventDefault();
+            return;
+        }
+        e.preventDefault();
+        
+        const res = await post("/api/login", new FormData(form));
+
+        if (!res.ok) {
+            form["senha"].value = "";
+            setErro(res.status === 401 ? "Usuário ou senha não conferem" : "Ocorreu algum erro");
+            return;
+        } else {
+            nav("/");
+            reauth();
+        }
+    };
+
     return (
         <div className='login-container'>
             <main className="login">
                 {erro && <div className="aviso-erro">{erro}</div>}
-                <form id="login-form" action="/api/login" method="POST">
+                <form onSubmit={onSubmit}>
                     <h2>Fazer login</h2>
                     <label>
                         Nome do usuário:
