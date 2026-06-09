@@ -12,11 +12,10 @@ export function LoginPage() {
     const onSubmit = async (e) => {
         const form = e.target;
 
+        e.preventDefault();
         if (!form.reportValidity()) {
-            e.preventDefault();
             return;
         }
-        e.preventDefault();
         
         const res = await post("/api/login", new FormData(form));
 

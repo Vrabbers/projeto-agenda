@@ -13,17 +13,16 @@ export function RegistrarPage() {
     const onSubmit = async (e) => {
         const form = e.target;
 
+        e.preventDefault();
         if (!form.reportValidity()) {
-            e.preventDefault();
             return;
         }
-        e.preventDefault();
 
         const res = await post("/api/registrar", new FormData(form));
 
         if (!res.ok) {
             form["senha"].value = "";
-            form["senha-repete"].value = "";
+            form["repete-senha"].value = "";
             setErro(res.status === 400 ? (await res.json()).error : "Ocorreu algum erro");
             return;
         } else {
@@ -41,7 +40,7 @@ export function RegistrarPage() {
         }
         senhaRepete.reportValidity();
     };
-    
+
     return (
         <div className='login-container'>
             <main className='login'>
