@@ -4,6 +4,7 @@
     "description": "",
     "scripts": {
         "server": "node index.js",
+        "watchserver": "node --watch --watch-path=./src index.js",
         "client": "npm run dev --prefix client",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "prod": "cd client && npm run build && cd .. && npm run server"

@@ -12,3 +12,6 @@ function createDbPool() {
 }
 
 export const db = createDbPool();
+
+await db.query("SELECT 1");
+console.log("query ok");
