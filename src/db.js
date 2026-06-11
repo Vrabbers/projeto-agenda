@@ -11,3 +11,4 @@ export const db = mysql2.createPool(process.env.DB_URL || {
 
 await db.query("SELECT 1");
 console.log("query ok");
+

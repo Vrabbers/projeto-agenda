@@ -46,13 +46,11 @@ apiRouter.post("/registrar", async (req, res) => {
         return;
     }
 
-    console.log(nome);
     const [verDuplicado] = await db.execute(
         "SELECT 1 FROM usuario WHERE nome = ?",
         [nome]
     );
 
-    console.log(verDuplicado);
     if (verDuplicado.length !== 0) {
         res.status(400).json({ "error": "Usuário já existe" });
         return;

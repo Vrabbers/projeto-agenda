@@ -1,10 +1,10 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { LoginPage } from './pages/LoginPage.jsx';
-import { RegistrarPage } from './pages/RegistrarPage.jsx';
-import { TopBarLayout } from './TopBarLayout.jsx';
-import { ErrorPage } from './pages/ErrorPage.jsx';
-import { HomePage } from './pages/HomePage.jsx';
-import { AuthProvider } from './AuthProvider.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import RegistrarPage from './pages/RegistrarPage.jsx';
+import TopBarLayout from './TopBarLayout.jsx';
+import ErrorPage from './pages/ErrorPage.jsx';
+import HomePage from './pages/HomePage.jsx';
+import AuthProvider from './AuthProvider.jsx';
 
 const router = createBrowserRouter([
     {

@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { post } from '../fetch-helper';
 import { useAuth } from '../auth-context';
 
-export function LoginPage() {
+export default function LoginPage() {
     const [erro, setErro] = useState(null);
     const reauth = useAuth()[1];
     const nav = useNavigate();

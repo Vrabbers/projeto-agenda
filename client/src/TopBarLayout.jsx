@@ -6,9 +6,16 @@ const notAuthPage = <>
     <Link to="/login" className="botao destaque">Fazer login</Link>
 </>;
 
-export function TopBarLayout() {
-    const [auth] = useAuth();
-
+export default function TopBarLayout() {
+    const [auth, reauth] = useAuth();
+    
+    const clickLogout = async () => {
+        const res = await fetch("/api/logout");
+        if (res.ok) {
+            await reauth();
+        }
+    };
+    
     return <>
         <header>
             <h1><Link to="/" className="main-a"><img src="/img/event_available.svg" width="28" /> Agenda Compartilhada</Link></h1>
@@ -18,7 +25,7 @@ export function TopBarLayout() {
                         <>
                             {(auth.nome)}
                             <br />
-                            <a href="/api/logout">Sair</a>
+                            <Link to="/" onClick={clickLogout}>Sair</Link>
                         </>
                     )
                 }
@@ -37,7 +44,7 @@ export function TopBarLayout() {
                 )
             }
         </header>
-        <main>
+        <main class="normal-main">
             {
                 (isAuth(auth) && <Outlet />) || (isNotAuth(auth) && notAuthPage) 
             }

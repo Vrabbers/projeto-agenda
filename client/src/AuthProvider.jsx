@@ -2,19 +2,18 @@ import { useEffect, useState } from "react";
 import { AuthContext } from "./auth-context.js";
 import { useMemo } from "react";
 
-export function AuthProvider({ children }) {
-    const [key, setKey] = useState(new Object());
-    const incrKey = () => { setKey(() => new Object()) };
-    
+export default function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
-    
-    useEffect(() => {
-        fetch("/api/whoami")
+
+    const reauth = () => {
+        return fetch("/api/whoami")
             .then(res => res.ok ? res.json() : "noauth")
             .then(setUser);
-    }, [key]);
+    };
+    
+    useEffect(() => { reauth(); }, []);
 
-    const val = useMemo(() => [user, incrKey], [user]);
+    const val = useMemo(() => [user, () => { setUser(null); return reauth(); }], [user]);
 
     return (
         <AuthContext value={val}>

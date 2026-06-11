@@ -14,7 +14,7 @@ export function saveAsync(session) {
 }
 
 export function regenerateAsync(session) {
-    return new Promise((resolve, reject) => {
+    return (new Promise((resolve, reject) => {
         session.regenerate((err) => {
             if (err) {
                 reject(err);
@@ -22,7 +22,7 @@ export function regenerateAsync(session) {
                 resolve();
             }
         })
-    });
+    }));
 }
 
 export function mysqlBackedSession(db) {

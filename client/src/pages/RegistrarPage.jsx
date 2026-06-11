@@ -5,7 +5,7 @@ import { post } from '../fetch-helper';
 import { useAuth } from '../auth-context';
 import { useRef } from 'react';
 
-export function RegistrarPage() {
+export default function RegistrarPage() {
     const [erro, setErro] = useState(null);
     const reauth = useAuth()[1];
     const nav = useNavigate();
@@ -34,11 +34,11 @@ export function RegistrarPage() {
     const senhaRef = useRef(null);
     const onSenhaRepeteChange = (e) => {
         const senhaRepete = e.target;
-        senhaRepete.setCustomValidity("");
         if (senhaRepete.value !== senhaRef.current.value) {
             senhaRepete.setCustomValidity("Senhas não são iguais.");
+        } else {
+            senhaRepete.setCustomValidity("");
         }
-        senhaRepete.reportValidity();
     };
 
     return (
