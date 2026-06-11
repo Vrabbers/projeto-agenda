@@ -12,6 +12,7 @@ main.login {
     padding: 0;
     overflow: hidden;
     flex-grow: 0;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
 }
 
 .login h1 {

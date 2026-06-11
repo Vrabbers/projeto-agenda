@@ -15,18 +15,27 @@ body {
 }
 
 header {
-    background-color: green;
+    background-color: #41750e;
     color: white;
     display: grid;
     grid-template-columns: auto auto;
     padding: 20px;
     align-items: center;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.425);
+    z-index: 1;    
+    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.3);
 }
 
 main {
     padding: 20px;
     flex-grow: 1;
+}
+
+main.normal-main {
+    background-color: #f7f7f7;
+    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.3);
+    box-sizing:border-box;
+    width: min(100vw, 1200px);
+    align-self: center;
 }
 
 h1 a {
@@ -50,6 +59,7 @@ nav {
     grid-column: span 2;
     margin-top: 10px;
     justify-self: center;
+    font-size: 18px;
 }
 
 nav ul {
@@ -80,11 +90,12 @@ a.botao, button {
     color: black;
     background: rgb(255, 255, 255);
     display: inline-block;
-    padding: 5px 10px;
-    border: 1px solid rgba(0, 0, 0, 0.473);
-    border-radius: 10px;
+    padding: 7px 14px;
+    border: 1px solid rgba(0, 0, 0, 0.493);
+    border-radius: 7px;
     font-size: 12pt;
     font-weight: normal;
+    text-align: center;
 }
 
 a.botao:hover, button:hover {
@@ -116,8 +127,8 @@ label {
 
 input {
     font-size: 16px;
-    padding: 5px 10px;
-    border-radius: 10px;
+    padding: 7px 10px;
+    border-radius: 7px;
     border: 1px solid rgba(0, 0, 0, 0.493);
 }
 
