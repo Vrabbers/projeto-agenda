@@ -36,8 +36,8 @@ h2 {
     font-weight: bold;
 }
 
-.user-box a {
-    color: inherit  ;
+.user-box a:not(.botao) {
+    color: inherit;
     font-weight: normal;
 }
 
