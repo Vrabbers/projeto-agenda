@@ -171,7 +171,21 @@ api.get("/events/:id", async (req, res) => {
         res.sendStatus(404);
     }
 
-    res.json(rows[0]);
+    const [participantes] = await db.execute(`
+        SELECT u.id, u.nome 
+            FROM usuario u
+            INNER JOIN participante p ON p.usuario = u.id
+            WHERE p.evento = ?
+        UNION
+        SELECT u.id, u.nome 
+            FROM usuario u
+            INNER JOIN evento e ON e.usuario_id = u.id
+            WHERE e.id = ?;`,
+    [eventoId, eventoId]);
+
+    const participantesObj = Object.fromEntries(participantes.map(x => [x.id, x.nome]));
+
+    res.json({participantes: participantesObj, ...rows[0]});
 });
 
 api.delete("/events/:id", async (req, res) => {
@@ -189,4 +203,27 @@ api.delete("/events/:id", async (req, res) => {
     }
 });
 
+api.get("/events/:id/disponibilidade", async (req, res) => {
+    const eventoId = req.params.id;
+    const usuarioId = req.session.user.id;
+
+    const [perm] = await db.execute(`
+        SELECT 1 FROM evento e
+        WHERE e.id = ? 
+        AND (e.usuario_id = ? OR EXISTS (SELECT 1 FROM participante p WHERE p.usuario = ? AND p.evento = e.id));
+    `, [eventoId, usuarioId, usuarioId]);
+
+    if (perm.length === 0) {
+        return res.sendStatus(403);
+    }
+
+    const [rows] = await db.execute(`
+        SELECT 
+            usuario, DATE_FORMAT(data, '%Y-%m-%d') as data, TIME_FORMAT(hora, '%H:00') as hora 
+        FROM participante_horario_possivel 
+        WHERE evento = ?;`,
+        [eventoId]);
+
+    res.json(rows);
+});
 export const apiRouter = api;

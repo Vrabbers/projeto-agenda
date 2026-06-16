@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../auth-context';
+import AgendaDisponibilidade from '../components/AgendaDisponibilidade';
 
 export default function EventoPage() {
     const { id } = useParams();
@@ -9,10 +10,13 @@ export default function EventoPage() {
     const [evento, setEvento] = useState(null);
 
     useEffect(() => {
-        fetch(`/api/events/${id}`)
-            .then(res => res.ok ? res.json() : Promise.reject())
-            .then(data => setEvento(data))
-            .catch(() => nav('/'));
+        (async () => {
+            const res = await fetch(`/api/events/${id}`);
+            if (!res.ok) setEvento(() => { throw new Error("Erro ao carregar evento") });
+
+            const data = await res.json();
+            setEvento(data);
+        })();
     }, [id, nav]);
 
     const handleExcluir = async () => {
@@ -23,7 +27,7 @@ export default function EventoPage() {
         if (res.ok) {
             nav('/');
         } else {
-            alert("Erro ao excluir.");
+            setEvento(() => { throw new Error("Erro ao excluir.") });
         }
     };
 
@@ -32,8 +36,9 @@ export default function EventoPage() {
 
     return (
         <>
+
             <div className="flex-row">
-                <h2>{evento.nome}</h2>
+                <h2>{evento.nome} </h2>
                 {
                     auth.id === evento.usuario_id &&
                     <button onClick={handleExcluir} className="destaque deleta">
@@ -41,13 +46,13 @@ export default function EventoPage() {
                     </button>
                 }
             </div>
-            <h3>Disponibilidade geral</h3>
-            <div>
-                {JSON.stringify(evento)}
-            </div>
             <div className="flex-row">
                 <Link className="botao" to="/">Voltar</Link>
-                <Link className="botao destaque" to="./registrar">Registrar disponibilidade</Link>
+            </div>
+
+            <h3>Disponibilidade geral</h3>
+            <div>
+                <AgendaDisponibilidade evento={evento} id={id} />
             </div>
 
         </>

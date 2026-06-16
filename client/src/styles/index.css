@@ -104,3 +104,7 @@ a.main-a {
 button.deleta {
     background-color: rgb(183, 0, 0); 
 }
+
+h3 {
+    margin: 10px 0;
+}

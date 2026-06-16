@@ -31,11 +31,10 @@ export default function ListasEventos() {
                     }
                     setEventosQueParticipo(dadosParticipo);
                 } else {
-                    throw new Error("Erro ao buscar eventos");
+                    setEventosQueParticipo(() => { throw new Error("Erro ao buscar eventos") } );
                 }
             } catch (error) {
-                console.error("Erro ao buscar eventos:", error);
-                throw error;
+                setEventosQueParticipo(() => { throw error; });
             } finally {
                 setLoading(false);
             }
