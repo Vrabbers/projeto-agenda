@@ -215,7 +215,7 @@ api.get("/events/:id/disponibilidade", async (req, res) => {
 
     const [rows] = await db.execute(`
         SELECT 
-            usuario, DATE_FORMAT(data, '%Y-%m-%d') as data, TIME_FORMAT(hora, '%H:00') as hora 
+            usuario, DATE_FORMAT(data, '%Y-%m-%d') as data, hora
         FROM participante_horario_possivel 
         WHERE evento = ?;`,
         [eventoId]);

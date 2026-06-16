@@ -4,10 +4,6 @@ import AgendaDisponibilidade from "../components/AgendaDisponibilidade";
 import ListasEventos from "../components/ListasEventos";
 
 export default function HomePage() {
-    const [auth] = useAuth();
-
-    if (!isAuth(auth)) return null;
-
     return (
         <ListasEventos />
     );

@@ -11,8 +11,7 @@ function chaveDeData(data, hora) {
 
 function chaveDB(dbData, dbHora) {
     const data = dbData.includes('T') ? dbDate.split('T')[0] : dbData;
-    const hora = parseInt(dbHora.split(':')[0]);
-    return `${data},${hora}`;
+    return `${data},${dbHora}`;
 }
 
 function TableBody({ dias, horas, totalDias, disponibilidades, participantes }) {
@@ -60,11 +59,13 @@ export default function AgendaDisponibilidade({ id, evento }) {
     const countDiasDaSemana = diasDaSemana.filter(x => x).length;
 
     const horas = [];
-    const horaInicio = parseInt(evento.hora_inicio.split(':')[0]);
-    const horaFim = parseInt(evento.hora_fim.split(':')[0]);
-    for (let h = horaInicio; h !== horaFim; h = (h + 1) % 24) {
+    const horaInicio = evento.hora_inicio;
+    const horaFim = evento.hora_fim;
+    let h = horaInicio;
+    do {
         horas.push(h % 24);
-    }
+        h = (h + 1) % 24;
+    } while (h !== horaFim)
 
     console.log(horas);
 
@@ -85,6 +86,7 @@ export default function AgendaDisponibilidade({ id, evento }) {
                     }
                     mapeado.get(chave).push(x.usuario);
                 }
+                console.log(mapeado);
 
                 setDisponibilidades(mapeado);
                 setLoading(false);

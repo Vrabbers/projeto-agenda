@@ -29,6 +29,9 @@ export default function CriarEventoPage() {
         formData.append('dias_da_semana', bitfield);
         diasLabels().forEach((_, i) => formData.delete(`dia-${i}`));
 
+        formData.set("hora_inicio", parseInt(formData.get("hora_inicio").split(":")[0]));
+        formData.set("hora_fim", parseInt(formData.get("hora_fim").split(":")[0]));
+
         const res = await post("/api/events", formData);
 
         if (!res.ok) {
