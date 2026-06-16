@@ -62,50 +62,41 @@ export default function CriarEventoPage() {
             {erro && <div className="aviso-erro">{erro}</div>}
             <h2>Criar novo evento</h2>
             <form onSubmit={onSubmit} className="criar-form" ref={formRef}>
-                <label>
+                <label className="colspan2">
                     Nome do evento:
                     <input name="nome" maxLength="60" type="text" required />
                 </label>
 
-                <label>Dias da semana:</label>
+                <div>
+                    <label>Dias da semana:</label>
 
-                <div className="seletor-dias-container">
-                    {diasLabels().map((label, i) => (
-                        <label key={i}>
-                            <input className="seletor-dias" type="checkbox" name={`dia-${i}`} />
-                            {label}
-                        </label>
+                    <div className="seletor-dias-container">
+                        {diasLabels().map((label, i) => (
+                            <label key={i}>
+                                <input className="seletor-dias" type="checkbox" name={`dia-${i}`} />
+                                {label}
+                            </label>
 
-                    ))}
+                        ))}
+                    </div>
                 </div>
-
-                <label>
-                    Granularidade:
-                    <select name="granularidade" onChange={(e) => setGranularidade(e.target.value)}>
-                        <option value="hora">Hora</option>
-                        <option value="dia">Dia</option>
-                    </select>
-                </label>
 
                 <label>
                     Data de início:
                     <input name="data_inicio" type="date" required />
                 </label>
 
-                {granularidade === 'hora' && (
-                    <>
-                        <label>
-                            Início:
-                            <input name="hora_inicio" type="time" step="3600" required onInput={roundHour} />
-                        </label>
-                        <label>
-                            Fim:
-                            <input name="hora_fim" type="time" step="3600" required onInput={roundHour} />
-                        </label>
-                    </>
-                )}
+                <label>
+                    Início:
+                    <input name="hora_inicio" type="time" step="3600" required onInput={roundHour} />
+                </label>
+                <label>
+                    Fim:
+                    <input name="hora_fim" type="time" step="3600" required onInput={roundHour} />
+                </label>
 
-                <button type="submit" className="destaque">Criar evento</button>
+
+                <button type="submit" className="destaque colspan2">Criar evento</button>
             </form>
         </>
     );

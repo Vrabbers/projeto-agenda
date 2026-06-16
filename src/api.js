@@ -141,17 +141,13 @@ api.get("/events/eventos-dos-quais-participo", async (req, res) => {
 });
 
 api.post("/events", async (req, res) => {
-    const { nome, dias_da_semana, granularidade, data_inicio, hora_inicio, hora_fim } = req.body;
+    const { nome, dias_da_semana, data_inicio, hora_inicio, hora_fim } = req.body;
     const usuario_id = req.session.user.id;
 
-    if (!nome || !dias_da_semana || !granularidade) {
-        return res.status(400).json({ error: "Faltam campos obrigatórios" });
-    }
-
     const query = await db.execute(`
-        INSERT INTO evento (nome, usuario_id, dias_da_semana, granularidade, data_inicio, hora_inicio, hora_fim)
+        INSERT INTO evento (nome, usuario_id, dias_da_semana, data_inicio, hora_inicio, hora_fim)
         VALUES (?, ?, ?, ?, ?, ?, ?);`,
-        [nome, usuario_id, parseInt(dias_da_semana), granularidade, data_inicio || null, hora_inicio || null, hora_fim || null]
+        [nome, usuario_id, parseInt(dias_da_semana), data_inicio, hora_inicio, hora_fim]
     );
 
     res.sendStatus(200);

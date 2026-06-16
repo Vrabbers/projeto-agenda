@@ -60,13 +60,13 @@ export default function AgendaDisponibilidade({ id, evento }) {
     const countDiasDaSemana = diasDaSemana.filter(x => x).length;
 
     const horas = [];
-    if (evento.hora_inicio && evento.hora_fim) {
-        const horaInicio = parseInt(evento.hora_inicio.split(':')[0]);
-        const horaFim = parseInt(evento.hora_fim.split(':')[0]);
-        for (let h = horaInicio; h <= horaFim; h++) {
-            horas.push(h % 24);
-        }
+    const horaInicio = parseInt(evento.hora_inicio.split(':')[0]);
+    const horaFim = parseInt(evento.hora_fim.split(':')[0]);
+    for (let h = horaInicio; h !== horaFim; h = (h + 1) % 24) {
+        horas.push(h % 24);
     }
+
+    console.log(horas);
 
     const dataInicio = new Date(evento.data_inicio);
     const semana = geraDias(28, new Date(), diasDaSemana);
