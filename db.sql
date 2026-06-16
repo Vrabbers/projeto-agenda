@@ -25,9 +25,12 @@ CREATE TABLE IF NOT EXISTS participante (
 );
 
 CREATE TABLE IF NOT EXISTS participante_horario_possivel (
+    id INT PRIMARY KEY AUTO_INCREMENT,
     usuario INT NOT NULL REFERENCES usuario(id) ON DELETE CASCADE,
     evento INT NOT NULL REFERENCES evento(id) ON DELETE CASCADE,
     data DATE NOT NULL,
     hora TIME NULL,
-    PRIMARY KEY (usuario, evento, hora)
+    UNIQUE (usuario, evento, data, hora),
+    INDEX idx_usuario (usuario),
+    INDEX idx_evento (evento)
 );

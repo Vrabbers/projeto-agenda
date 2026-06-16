@@ -16,15 +16,6 @@ export default function CriarEventoPage() {
         const form = e.target;
         if (!form.reportValidity()) {
             return;
-        } else {
-            if (form["hora_inicio"].valueAsDate > form["hora_fim"].valueAsDate) {
-                form["hora_fim"].setCustomValidity("Hora fim não pode ser antes da hora de início.");
-                form.reportValidity();
-                return;
-            } else {
-                form["hora_fim"].setCustomValidity("");
-                form.reportValidity();
-            }
         }
 
         const formData = new FormData(form);
