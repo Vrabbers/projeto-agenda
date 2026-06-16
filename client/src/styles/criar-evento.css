@@ -1,0 +1,31 @@
+.criar-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.criar-form > button {
+    grid-column: span 2;
+}
+
+.seletor-dias-container {
+    display: flex;
+    gap: 5px;
+    justify-content: space-evenly;
+}
+
+.seletor-dias-container > label {
+    display: flex;
+    gap: 0px;
+}
+
+.seletor-dias {
+    height: 20px;
+}
+
+@media screen and (max-width: 750px) {
+    .criar-form {
+        display: flex;
+        gap: 10px;
+    }
+}

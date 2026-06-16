@@ -9,18 +9,18 @@ const notAuthPage = <>
 
 export default function TopBarLayout() {
     const [auth, reauth] = useAuth();
-    
+
     const clickLogout = async () => {
         await fetch("/api/logout");
         await reauth();
     };
-    
+
     return <>
         <header>
             <h1><Link to="/" className="main-a"><img src="/img/event_available.svg" width="28" /> <span className="main-a-texto">Agenda Compartilhada</span></Link></h1>
             <div className="user-box">
                 {
-                    isAuth(auth) &&  (
+                    isAuth(auth) && (
                         <>
                             {(auth.nome)}
                             <br />
@@ -35,7 +35,7 @@ export default function TopBarLayout() {
         </header>
         <main className="normal-main">
             {
-                (isAuth(auth) && <Outlet />) || (isNotAuth(auth) && notAuthPage) 
+                (isAuth(auth) && <Outlet />) || (isNotAuth(auth) && notAuthPage)
             }
         </main>
     </>;

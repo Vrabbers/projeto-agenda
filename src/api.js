@@ -3,11 +3,11 @@ import bcrypt from "bcrypt";
 import { db } from "./db.js";
 import { regenerateAsync, saveAsync } from "./session-promise.js";
 
-export const apiRouter = express.Router();
+export const api = express.Router();
 
 const hashRounds = 10;
 
-apiRouter.post('/login', async (req, res) => {
+api.post('/login', async (req, res) => {
     const [vals] = await db.execute(
         "SELECT id, nome, senha FROM usuario WHERE nome = ?",
         [req.body.nome.trim()]
@@ -33,7 +33,7 @@ apiRouter.post('/login', async (req, res) => {
     res.sendStatus(200);
 });
 
-apiRouter.post("/registrar", async (req, res) => {
+api.post("/registrar", async (req, res) => {
     let { nome, senha } = req.body;
 
     nome = nome.trim();
@@ -85,26 +85,26 @@ apiRouter.post("/registrar", async (req, res) => {
 // Daqui em diante, todas as rotas de API requerem autenticação
 // ====================================================================================================================
 
-apiRouter.use((req, res, next) => {
+api.use((req, res, next) => {
     if (req.session.user)
         next();
     else
         res.sendStatus(401);
 });
 
-apiRouter.get('/logout', async (req, res) => {
+api.get('/logout', async (req, res) => {
     req.session.user = null;
     await saveAsync(req.session);
     await regenerateAsync(req.session);
     res.redirect('/');
 });
 
-apiRouter.get("/whoami", (req, res) => {
+api.get("/whoami", (req, res) => {
     const { id, nome } = req.session.user;
     res.json({ id, nome });
 });
 
-apiRouter.get("/user/:id", async (req, res) => {
+api.get("/user/:id", async (req, res) => {
     const [vals] = await db.execute(
         "SELECT nome FROM usuario WHERE id = ?",
         [req.params.id]
@@ -118,4 +118,24 @@ apiRouter.get("/user/:id", async (req, res) => {
     const { nome } = vals[0];
 
     res.json({ id: req.params.id, nome });
+});
+
+api.get("/events/meus-eventos", async (req, res) => {
+    const [valsMeusEventos] = await db.execute(
+        "SELECT id, nome FROM evento WHERE usuario_id = ? ORDER BY data_criado;",
+        [req.session.user.id]
+    );
+    res.json(valsMeusEventos);
+});
+
+api.get("/events/eventos-que-participo", async (req, res) => {
+    const [valsEventosParticipantes] = await db.execute(`
+        SELECT DISTINCT e.id AS id, e.nome AS nome, e.usuario_id AS usuario_criou
+        FROM evento e
+        INNER JOIN participante p ON e.id = p.evento
+        WHERE p.usuario = ?
+        ORDER BY e.data_criado;`,
+        [req.session.user.id]
+    );
+    res.json(valsEventosParticipantes);
 });

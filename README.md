@@ -8,8 +8,9 @@ Definir `APP_SESSION_SECRET` como string criptograficamente aleatória com ao me
 
 Definir `APP_SESSION_NAME` com nome da aplicação.
 
+Para rodar sessão local de desenvolvimento:
 ```
 npm install
-npm run dev/prod
+npm run dev
 ``` 
 

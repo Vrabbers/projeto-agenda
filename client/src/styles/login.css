@@ -33,12 +33,4 @@ main.login {
     padding: 10px 20px;
 }
 
-.aviso-erro {
-    background-color: rgb(255, 191, 191);
-    padding: 10px 20px;
-    border-bottom: 2px solid rgb(255, 130, 130);
-}
 
-.aviso-erro::before {
-    content: "❌ ";
-}

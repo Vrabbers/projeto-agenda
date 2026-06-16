@@ -1,6 +1,7 @@
 import {} from "react-router-dom";
 import { isAuth, useAuth } from "../auth-context";
 import Agenda from "../components/Agenda";
+import ListasEventos from "../components/ListasEventos";
 
 export default function HomePage() {
     const [auth] = useAuth();
@@ -8,9 +9,6 @@ export default function HomePage() {
     if (!isAuth(auth)) return null;
 
     return (
-        <>
-            <h2>Eventos que você criou</h2>
-            <Agenda />
-        </>
+        <ListasEventos />
     );
 }

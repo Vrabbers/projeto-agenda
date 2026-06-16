@@ -65,11 +65,12 @@ label {
     gap: 5px;
 }
 
-input {
+input, select {
     font-size: 1rem;
     padding: 7px 10px;
     border-radius: 7px;
     border: 1px solid rgba(0, 0, 0, 0.493);
+    background-color: white;
 }
 
 form button {
@@ -81,4 +82,21 @@ a.main-a {
     flex-direction: row;
     align-items: center;
     gap: 10px;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: space-between;
+}
+
+.aviso-erro {
+    background-color: rgb(255, 191, 191);
+    padding: 10px 20px;
+    border: 2px solid rgb(255, 130, 130);
+}
+
+.aviso-erro::before {
+    content: "❌ ";
 }

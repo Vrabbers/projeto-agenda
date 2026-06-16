@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS evento (
     dias_da_semana TINYINT NOT NULL,
     hora_inicio TIME NULL,
     hora_fim TIME NULL,
-    data_inicio DATE NULL,
+    data_inicio DATE NOT NULL,
     granularidade ENUM ('hora', 'dia') NOT NULL,
     data_criado DATETIME DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (nome, usuario_id)
@@ -29,6 +29,5 @@ CREATE TABLE IF NOT EXISTS participante_horario_possivel (
     evento INT NOT NULL REFERENCES evento(id) ON DELETE CASCADE,
     data DATE NOT NULL,
     hora TIME NULL,
-    comentario TEXT NULL,
     PRIMARY KEY (usuario, evento, hora)
 );
