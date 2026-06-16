@@ -177,11 +177,11 @@ api.get("/events/:id", async (req, res) => {
             FROM usuario u
             INNER JOIN evento e ON e.usuario_id = u.id
             WHERE e.id = ?;`,
-    [eventoId, eventoId]);
+        [eventoId, eventoId]);
 
     const participantesObj = Object.fromEntries(participantes.map(x => [x.id, x.nome]));
 
-    res.json({participantes: participantesObj, ...rows[0]});
+    res.json({ participantes: participantesObj, ...rows[0] });
 });
 
 api.delete("/events/:id", async (req, res) => {
@@ -222,4 +222,50 @@ api.get("/events/:id/disponibilidade", async (req, res) => {
 
     res.json(rows);
 });
+
+api.post("/events/:id/participantes", async (req, res) => {
+    const eventoId = req.params.id;
+    const usuarioId = req.session.user.id;
+    const usuarioAdicionarId = req.body.usuario_id;
+    const [evento] = await db.execute(
+        "SELECT usuario_id FROM evento WHERE id = ?;",
+        [eventoId]
+    );
+
+    if (evento.length === 0) {
+        return res.sendStatus(404);
+    }
+
+    if (evento[0].usuario_id !== usuarioId) {
+        return res.sendStatus(403);
+    }
+
+    console.log([usuarioId, eventoId]);
+    await db.execute(`
+            INSERT INTO participante (usuario, evento) 
+            VALUES (?, ?)`,
+        [usuarioAdicionarId, eventoId]);
+
+    res.sendStatus(200);
+});
+
+api.get("/users/search/:nome", async (req, res) => {
+    const { nome } = req.params;
+
+    if (!nome || nome.trim() === "") {
+        return res.sendStatus(400);
+    }
+
+    const [usuarios] = await db.execute(
+        "SELECT id, nome FROM usuario WHERE nome = ?;",
+        [nome.trim()]
+    );
+
+    if (usuarios.length === 0) {
+        return res.sendStatus(404);
+    }
+
+    res.json(usuarios[0]);
+});
+
 export const apiRouter = api;

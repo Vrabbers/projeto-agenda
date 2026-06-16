@@ -9,7 +9,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    --largura: 1200px;
+    --largura: 1400px;
 }
 
 main {
@@ -107,4 +107,38 @@ button.deleta {
 
 h3 {
     margin: 10px 0;
+}
+
+.participantes {
+    border: 1px solid gray;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.participantes > ul {
+    padding-left: 10px;
+}
+
+.participantes > ul > li {
+    padding-left: 0;
+    list-style: none;
+}
+
+.participantes > ul > li::before {
+    content: "- ";
+}
+
+.table-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.table-container table {
+    
 }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../auth-context';
 import AgendaDisponibilidade from '../components/AgendaDisponibilidade';
+import { post } from '../fetch-helper';
 
 export default function EventoPage() {
     const { id } = useParams();
@@ -31,12 +32,43 @@ export default function EventoPage() {
         }
     };
 
+    const adicionarParticipante = async () => {
+        const nomeBusca = prompt("Digite o nome do participante:");
+        if (nomeBusca === null || nomeBusca.trim() === "") 
+            return;
+
+        const resBusca = await fetch(`/api/users/search/${encodeURIComponent(nomeBusca.trim())}`);
+
+        if (resBusca.status === 404) {
+            alert(`Usuário "${nomeBusca}" não foi encontrado.`);
+            return;
+        } else if (!resBusca.ok) {
+            alert("Ocorreu algum erro");
+            return;
+        }
+
+        const usuarioEncontrado = await resBusca.json();
+
+        const confirmar = confirm(`Adicionar "${usuarioEncontrado.nome}" ao evento?`);
+        if (!confirmar) 
+            return;
+
+        const resAdd = await post(`/api/events/${id}/participantes`, { usuario_id: usuarioEncontrado.id });
+
+        if (resAdd.ok) {
+            alert("Usuário adicionado");
+            window.navigation.reload();
+        } else {
+            alert("Algo de errado aconteceu.");
+        }
+    }
+
+
     if (!evento)
         return <p>Carregando...</p>;
 
     return (
         <>
-
             <div className="flex-row">
                 <h2>{evento.nome} </h2>
                 {
@@ -46,15 +78,17 @@ export default function EventoPage() {
                     </button>
                 }
             </div>
-            <div className="flex-row">
-                <Link className="botao" to="/">Voltar</Link>
+            <div className='flex-row'>
+                <div class='table-container'>
+                    <h3>Disponibilidade</h3>
+                    <AgendaDisponibilidade evento={evento} id={id} />
+                </div>
+                <div className="participantes">
+                    Participantes:
+                    <ul>{Object.entries(evento.participantes).map(([id, nome]) => <li>{nome}</li>)}</ul>
+                    {auth.id === evento.usuario_id && <button className='destaque' onClick={adicionarParticipante}>Adicionar</button>}
+                </div>
             </div>
-
-            <h3>Disponibilidade geral</h3>
-            <div>
-                <AgendaDisponibilidade evento={evento} id={id} />
-            </div>
-
         </>
     );
 }
