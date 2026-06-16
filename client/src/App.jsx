@@ -5,7 +5,8 @@ import TopBarLayout from './TopBarLayout.jsx';
 import ErrorPage from './pages/ErrorPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import AuthProvider from './AuthProvider.jsx';
-import CriarEvento from './pages/CriarEvento.jsx';
+import CriarEventoPage from './pages/CriarEventoPage.jsx';
+import EventoPage from './pages/EventoPage.jsx';
 
 const router = createBrowserRouter([
     {
@@ -15,8 +16,12 @@ const router = createBrowserRouter([
             {
                 element: <TopBarLayout />,
                 children: [
-                    { index: true, element: <HomePage /> },
-                    { path: "criar-evento", element: <CriarEvento /> }
+                    { path: "", index: true, element: <HomePage /> },
+                    { path: "criar-evento", element: <CriarEventoPage /> },
+                    { path: "evento/:id", children: [
+                        { index: true, element: <EventoPage /> },
+                        { path: "registrar", element: <p>hi</p> }
+                    ] }
 
                 ]
             },

@@ -4,7 +4,7 @@ export default function ErrorPage() {
     const error = useRouteError();
     console.error(error);
 
-    return <main>
+    return <main className="normal-main">
         <h1>Erro</h1>
         <big>
             {
@@ -14,6 +14,6 @@ export default function ErrorPage() {
             }
         </big>
         <br />
-        <Link to="/">Voltar ao início.</Link>
+        <Link>Voltar ao início.</Link>
     </main>;
 }

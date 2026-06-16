@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { db } from "./db.js";
 import { regenerateAsync, saveAsync } from "./session-promise.js";
 
-export const api = express.Router();
+const api = express.Router();
 
 const hashRounds = 10;
 
@@ -56,7 +56,7 @@ api.post("/registrar", async (req, res) => {
         return;
     }
 
-    const MAX_INT32 = (2**31) - 1;
+    const MAX_INT32 = (2 ** 31) - 1;
     let id;
     while (true) {
         id = Math.floor(Math.random() * MAX_INT32);
@@ -128,7 +128,7 @@ api.get("/events/meus-eventos", async (req, res) => {
     res.json(valsMeusEventos);
 });
 
-api.get("/events/eventos-que-participo", async (req, res) => {
+api.get("/events/eventos-dos-quais-participo", async (req, res) => {
     const [valsEventosParticipantes] = await db.execute(`
         SELECT DISTINCT e.id AS id, e.nome AS nome, e.usuario_id AS usuario_criou
         FROM evento e
@@ -139,3 +139,54 @@ api.get("/events/eventos-que-participo", async (req, res) => {
     );
     res.json(valsEventosParticipantes);
 });
+
+api.post("/events", async (req, res) => {
+    const { nome, dias_da_semana, granularidade, data_inicio, hora_inicio, hora_fim } = req.body;
+    const usuario_id = req.session.user.id;
+
+    if (!nome || !dias_da_semana || !granularidade) {
+        return res.status(400).json({ error: "Faltam campos obrigatórios" });
+    }
+
+    const query = await db.execute(`
+        INSERT INTO evento (nome, usuario_id, dias_da_semana, granularidade, data_inicio, hora_inicio, hora_fim)
+        VALUES (?, ?, ?, ?, ?, ?, ?);`,
+        [nome, usuario_id, parseInt(dias_da_semana), granularidade, data_inicio || null, hora_inicio || null, hora_fim || null]
+    );
+
+    res.sendStatus(200);
+});
+
+api.get("/events/:id", async (req, res) => {
+    const eventoId = req.params.id;
+    const usuarioId = req.session.user.id;
+    const [rows] = await db.execute(`
+        SELECT e.* FROM evento e
+        WHERE e.id = ? 
+        AND (e.usuario_id = ? OR EXISTS (SELECT 1 FROM participante p WHERE p.usuario = ? AND p.evento = e.id));`,
+        [eventoId, usuarioId, usuarioId]
+    );
+
+    if (rows.length === 0) {
+        res.sendStatus(404);
+    }
+
+    res.json(rows[0]);
+});
+
+api.delete("/events/:id", async (req, res) => {
+    const eventoId = req.params.id;
+    const usuarioId = req.session.user.id;
+
+    const [result] = await db.execute(
+        "DELETE FROM evento WHERE id = ? AND usuario_id = ?;",
+        [eventoId, usuarioId]
+    );
+    if (result.affectedRows === 0) {
+        return res.sendStatus(404);
+    } else {
+        return res.sendStatus(200);
+    }
+});
+
+export const apiRouter = api;

@@ -100,3 +100,7 @@ a.main-a {
 .aviso-erro::before {
     content: "❌ ";
 }
+
+button.deleta {
+    background-color: rgb(183, 0, 0); 
+}

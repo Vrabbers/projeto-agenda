@@ -4,7 +4,7 @@ import { post } from '../fetch-helper';
 import { useNavigate } from 'react-router-dom';
 import { diasLabels, diasParaBits } from '../dias-helper';
 
-export default function CriarEvento() {
+export default function CriarEventoPage() {
     const [granularidade, setGranularidade] = useState('hora');
     const [erro, setErro] = useState(null);
     const formRef = useRef(null);
@@ -35,7 +35,7 @@ export default function CriarEvento() {
         }
         const bitfield = diasParaBits(diasArray);
 
-        formData.append('dias-da-semana', bitfield);
+        formData.append('dias_da_semana', bitfield);
         diasLabels().forEach((_, i) => formData.delete(`dia-${i}`));
 
         const res = await post("/api/events", formData);
@@ -43,7 +43,7 @@ export default function CriarEvento() {
         if (!res.ok) {
             setErro("Erro ao criar evento");
         } else {
-            nav("/eventos");
+            nav("/");
         }
     };
 
@@ -70,7 +70,7 @@ export default function CriarEvento() {
         <>
             {erro && <div className="aviso-erro">{erro}</div>}
             <h2>Criar novo evento</h2>
-            <form onSubmit={onSubmit} class="criar-form" ref={formRef}>
+            <form onSubmit={onSubmit} className="criar-form" ref={formRef}>
                 <label>
                     Nome do evento:
                     <input name="nome" maxLength="60" type="text" required />

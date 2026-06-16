@@ -22,7 +22,7 @@ export default function TopBarLayout() {
                 {
                     isAuth(auth) && (
                         <>
-                            {(auth.nome)}
+                            {auth.nome}
                             <br />
                             <Link to="/" onClick={clickLogout}>Sair</Link>
                         </>

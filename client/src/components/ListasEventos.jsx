@@ -12,16 +12,16 @@ export default function ListasEventos() {
         (async () => {
             try {
                 setLoading(true);
-                
+
                 const [resMeus, resParticipo] = await Promise.all([
                     fetch('/api/events/meus-eventos'),
-                    fetch('/api/events/eventos-que-participo')
+                    fetch('/api/events/eventos-dos-quais-participo')
                 ]);
 
                 if (resMeus.ok && resParticipo.ok) {
                     const dadosMeus = await resMeus.json();
                     const dadosParticipo = await resParticipo.json();
-                    
+
                     setMeusEventos(dadosMeus);
 
                     for (const p of dadosParticipo) {
@@ -30,6 +30,8 @@ export default function ListasEventos() {
                         p.usuarioNome = un;
                     }
                     setEventosQueParticipo(dadosParticipo);
+                } else {
+                    throw new Error("Erro ao buscar eventos");
                 }
             } catch (error) {
                 console.error("Erro ao buscar eventos:", error);
@@ -46,7 +48,7 @@ export default function ListasEventos() {
 
     return (
         <>
-            <div class="flex-row"> <h2>Eventos que você criou</h2>  <Link className="botao destaque" to="/criar-evento">Criar Evento</Link> </div>
+            <div className="flex-row"> <h2>Eventos que você criou</h2>  <Link className="botao destaque" to="/criar-evento">Criar Evento</Link> </div>
             <table className='lista-eventos'>
                 <thead>
                     <tr>
