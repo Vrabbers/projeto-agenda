@@ -133,12 +133,3 @@ h3 {
     content: "- ";
 }
 
-.table-container {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.table-container table {
-    
-}

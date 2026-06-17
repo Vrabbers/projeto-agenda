@@ -1,6 +1,8 @@
+import "../styles/evento.css";
 import { useParams } from "react-router-dom";
 import { bitsParaDias, diasLabels, geraDias } from "../dias-helper";
 import { useEffect, useState } from "react";
+import { useAuth } from "../auth-context";
 
 const formataData = new Intl.DateTimeFormat('pt-BR');
 
@@ -14,7 +16,9 @@ function chaveDB(dbData, dbHora) {
     return `${data},${dbHora}`;
 }
 
-function TableBody({ dias, horas, totalDias, disponibilidades, participantes }) {
+function TableBody({ dias, horas, totalDias, disponibilidades, participantes, getDisponibilidade }) {
+    const [auth] = useAuth();
+
     const els = []
     for (let i = 0; i < horas.length + 1; i++) {
         els.push([]);
@@ -33,14 +37,15 @@ function TableBody({ dias, horas, totalDias, disponibilidades, participantes }) 
             const k = chaveDeData(dias[d], horas[h]);
             const temDisponibilidade = disponibilidades.has(k);
             const corpo = temDisponibilidade ? disponibilidades.get(k).map(uid => participantes[uid]).join(", ") : ""
-            els[h + 1][d + doff] = (
-                <td
-                    key={`${horas[h]},${dias[d]}`}
-                    className={temDisponibilidade ? "slot-disponivel" : "slot-vazio"}
-                >
-                    {corpo}
-                </td>
-            );
+            const key = `${horas[h]},${dias[d]}`;
+            if (temDisponibilidade) {
+                const souEu = disponibilidades.get(k).findIndex(x => x === auth.id) !== -1;
+                els[h + 1][d + doff] = (
+                    <td key={key} className={souEu && "eu"}> {corpo} </td>
+                );
+            } else {
+                els[h + 1][d + doff] = <td key={key} />;
+            }
             els[h + 1].fill(<td />, 1, doff);
         }
         els[0].fill(<th />, 1, doff);
@@ -72,28 +77,30 @@ export default function AgendaDisponibilidade({ id, evento }) {
     const dataInicio = new Date(evento.data_inicio);
     const semana = geraDias(28, new Date(), diasDaSemana);
 
-    useEffect(() => {
-        (async () => {
-            const res = await fetch(`/api/events/${id}/disponibilidade`);
-            if (res.ok) {
-                const data = await res.json();
-                const mapeado = new Map();
+    const getDisponibilidade = async () => {
+        const res = await fetch(`/api/events/${id}/disponibilidade`);
+        if (res.ok) {
+            const data = await res.json();
+            const mapeado = new Map();
 
-                for (const x of data) {
-                    const chave = chaveDB(x.data, x.hora);
-                    if (!mapeado.has(chave)) {
-                        mapeado.set(chave, []);
-                    }
-                    mapeado.get(chave).push(x.usuario);
+            for (const x of data) {
+                const chave = chaveDB(x.data, x.hora);
+                if (!mapeado.has(chave)) {
+                    mapeado.set(chave, []);
                 }
-                console.log(mapeado);
-
-                setDisponibilidades(mapeado);
-                setLoading(false);
-            } else {
-                setDisponibilidades(() => { throw new Error("Erro ao carregar disponibilidades"); });
+                mapeado.get(chave).push(x.usuario);
             }
-        })();
+            console.log(mapeado);
+
+            setDisponibilidades(mapeado);
+            setLoading(false);
+        } else {
+            setDisponibilidades(() => { throw new Error("Erro ao carregar disponibilidades"); });
+        }
+    };
+
+    useEffect(() => {
+        getDisponibilidade();
     }, [id]);
 
 
@@ -112,12 +119,13 @@ export default function AgendaDisponibilidade({ id, evento }) {
     return (
         <table>
             {thead}
-            {semana.map((x, i) => <TableBody 
-                key={i} 
-                dias={x} horas={horas} 
-                totalDias={countDiasDaSemana} 
-                disponibilidades={disponibilidades} 
-                participantes={evento.participantes}/>)}
+            {semana.map((x, i) => <TableBody
+                key={i}
+                dias={x} horas={horas}
+                totalDias={countDiasDaSemana}
+                disponibilidades={disponibilidades}
+                participantes={evento.participantes}
+                getDisponibilidade={getDisponibilidade} />)}
         </table>
     );
 }
