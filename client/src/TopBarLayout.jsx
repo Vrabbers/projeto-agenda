@@ -13,6 +13,7 @@ export default function TopBarLayout() {
 
     const clickLogout = async () => {
         try {
+            nav("/");
             await fetch("/api/logout");
             await reauth();
         } finally {

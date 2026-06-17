@@ -77,10 +77,12 @@ export default function AgendaDisponibilidade({ id, evento, semanas }) {
     const horaInicio = evento.hora_inicio;
     const horaFim = evento.hora_fim;
     let h = horaInicio;
-    do {
-        horas.push(h % 24);
+    while (true) {
+        horas.push(h);
+        if (h === horaFim)
+            break;
         h = (h + 1) % 24;
-    } while (h !== horaFim)
+    }
 
     if (semanas < 1) {
         semanas = 1;
