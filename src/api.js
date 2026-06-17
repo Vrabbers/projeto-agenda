@@ -275,7 +275,9 @@ api.post("/events/:id/disponibilidade", async (req, res) => {
     const usuarioId = req.session.user.id;
     const { data, hora } = req.body;
 
-    if (!data || !hora) return res.sendStatus(400);
+    if (!data || hora === undefined) {
+        return res.sendStatus(400);
+    }
 
     const [perm] = await db.execute(`
         SELECT 1 FROM evento e
@@ -301,8 +303,9 @@ api.delete("/events/:id/disponibilidade", async (req, res) => {
     const usuarioId = req.session.user.id;
     const { data, hora } = req.body;
 
-    if (!data || !hora) 
+    if (!data || hora === undefined) {
         return res.sendStatus(400);
+    }
 
     const [result] = await db.execute(`
         DELETE FROM participante_horario_possivel 
