@@ -14,6 +14,6 @@ export default function ErrorPage() {
             }
         </big>
         <br />
-        <Link>Voltar ao início.</Link>
+        <Link to="/" reloadDocument>Voltar ao início.</Link>
     </main>;
 }

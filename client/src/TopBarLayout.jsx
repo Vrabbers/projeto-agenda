@@ -1,5 +1,5 @@
 import "./styles/top-bar.css";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { isAuth, isNotAuth, useAuth } from "./auth-context";
 
 const notAuthPage = <>
@@ -9,10 +9,16 @@ const notAuthPage = <>
 
 export default function TopBarLayout() {
     const [auth, reauth] = useAuth();
+    const nav = useNavigate();
 
     const clickLogout = async () => {
-        await fetch("/api/logout");
-        await reauth();
+        try {
+            await fetch("/api/logout");
+            await reauth();
+        } finally {
+            await reauth();
+            nav("/");
+        }
     };
 
     return <>
@@ -35,7 +41,7 @@ export default function TopBarLayout() {
         </header>
         <main className="normal-main">
             {
-                (isAuth(auth) && <Outlet />) || (isNotAuth(auth) && notAuthPage)
+                (isAuth(auth) && <Outlet />) || notAuthPage
             }
         </main>
     </>;
