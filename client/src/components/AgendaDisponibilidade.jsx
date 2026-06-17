@@ -48,7 +48,7 @@ function TableBody({ dias, horas, totalDias, disponibilidades, participantes, ge
             }
             els[h + 1].fill(<td />, 1, doff);
         }
-        els[0].fill(<th />, 1, doff);
+        els[0].fill(<th scope="col"/>, 1, doff);
     }
 
     const rows = els.map((x, i) => <tr key={i}>{x}</tr>);

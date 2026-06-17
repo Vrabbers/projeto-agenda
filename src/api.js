@@ -146,7 +146,7 @@ api.post("/events", async (req, res) => {
 
     const query = await db.execute(`
         INSERT INTO evento (nome, usuario_id, dias_da_semana, data_inicio, hora_inicio, hora_fim)
-        VALUES (?, ?, ?, ?, ?, ?, ?);`,
+        VALUES (?, ?, ?, ?, ?, ?);`,
         [nome, usuario_id, parseInt(dias_da_semana), data_inicio, hora_inicio, hora_fim]
     );
 
