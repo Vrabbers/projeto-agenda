@@ -1,5 +1,8 @@
 # projeto-agenda
-Projeto final entregue para a disciplina de Desenvolvimento Web.
+Projeto final entregue para a disciplina de Desenvolvimento Web. 
+
+Aplicação web em que usuários podem criar eventos, e os usuários podem marcar quais horários podem participar de um evento.
+Todos então podem ver quais horários encaixam para quais pessoas.
 
 ## Instalação
 Requer banco de dados MySQL ou compatível com URI de conexão na variável `DB_URL` (ou verifique código para variáveis separadas).
