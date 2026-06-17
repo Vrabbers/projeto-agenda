@@ -130,11 +130,14 @@ api.get("/events/meus-eventos", async (req, res) => {
 
 api.get("/events/eventos-dos-quais-participo", async (req, res) => {
     const [valsEventosParticipantes] = await db.execute(`
-        SELECT DISTINCT e.id AS id, e.nome AS nome, e.usuario_id AS usuario_criou
-        FROM evento e
-        INNER JOIN participante p ON e.id = p.evento
-        WHERE p.usuario = ?
-        ORDER BY e.data_criado;`,
+        SELECT id, nome, usuario_criou 
+        FROM (
+            SELECT DISTINCT e.id AS id, e.nome AS nome, e.usuario_id AS usuario_criou, e.data_criado
+            FROM evento e
+            INNER JOIN participante p ON e.id = p.evento
+            WHERE p.usuario = ?
+        ) AS subquery
+        ORDER BY data_criado;`,
         [req.session.user.id]
     );
     res.json(valsEventosParticipantes);
