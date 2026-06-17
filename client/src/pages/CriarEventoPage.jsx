@@ -50,7 +50,9 @@ export default function CriarEventoPage() {
             form[`dia-${i}`].checked = true;
         }
 
-        form["data_inicio"].valueAsDate = new Date();
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0);
+        form["data_inicio"].valueAsDate = hoje;
     }, [formRef.current])
 
     const roundHour = (e) => {

@@ -89,7 +89,7 @@ export default function AgendaDisponibilidade({ id, evento, semanas }) {
     }
 
     const dataInicio = new Date(evento.data_inicio);
-    const semana = geraDias(semanas * 7, new Date(), diasDaSemana);
+    const semana = geraDias(semanas * 7, dataInicio, diasDaSemana);
 
     const getDisponibilidade = useCallback(async () => {
         const res = await fetch(`/api/events/${id}/disponibilidade`);
