@@ -240,7 +240,6 @@ api.post("/events/:id/participantes", async (req, res) => {
         return res.sendStatus(403);
     }
 
-    console.log([usuarioId, eventoId]);
     await db.execute(`
             INSERT INTO participante (usuario, evento) 
             VALUES (?, ?)`,
@@ -266,6 +265,51 @@ api.get("/users/search/:nome", async (req, res) => {
     }
 
     res.json(usuarios[0]);
+});
+
+api.post("/events/:id/disponibilidade", async (req, res) => {
+    const eventoId = req.params.id;
+    const usuarioId = req.session.user.id;
+    const { data, hora } = req.body;
+
+    if (!data || !hora) return res.sendStatus(400);
+
+    const [perm] = await db.execute(`
+        SELECT 1 FROM evento e
+        WHERE e.id = ? 
+        AND (e.usuario_id = ? OR EXISTS (SELECT 1 FROM participante p WHERE p.usuario = ? AND p.evento = e.id));
+    `, [eventoId, usuarioId, usuarioId]);
+
+    if (perm.length === 0) {
+        return res.sendStatus(403);
+    }
+
+    await db.execute(`
+        INSERT INTO participante_horario_possivel (usuario, evento, data, hora) 
+        VALUES (?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE usuario=usuario;
+    `, [usuarioId, eventoId, data, hora]);
+
+    res.sendStatus(200);
+});
+
+api.delete("/events/:id/disponibilidade", async (req, res) => {
+    const eventoId = req.params.id;
+    const usuarioId = req.session.user.id;
+    const { data, hora } = req.body;
+
+    if (!data || !hora) 
+        return res.sendStatus(400);
+
+    const [result] = await db.execute(`
+        DELETE FROM participante_horario_possivel 
+        WHERE usuario = ? AND evento = ? AND data = ? AND hora = ?;
+    `, [usuarioId, eventoId, data, hora]);
+
+    if (result.affectedRows === 0) 
+        return res.sendStatus(404);
+
+    res.sendStatus(200);
 });
 
 export const apiRouter = api;

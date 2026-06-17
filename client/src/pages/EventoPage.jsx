@@ -9,6 +9,7 @@ export default function EventoPage() {
     const nav = useNavigate();
     const [auth] = useAuth();
     const [evento, setEvento] = useState(null);
+    const [semanas, setSemanas] = useState(4);
 
     useEffect(() => {
         (async () => {
@@ -34,7 +35,7 @@ export default function EventoPage() {
 
     const adicionarParticipante = async () => {
         const nomeBusca = prompt("Digite o nome do participante:");
-        if (nomeBusca === null || nomeBusca.trim() === "") 
+        if (nomeBusca === null || nomeBusca.trim() === "")
             return;
 
         const resBusca = await fetch(`/api/users/search/${encodeURIComponent(nomeBusca.trim())}`);
@@ -50,7 +51,7 @@ export default function EventoPage() {
         const usuarioEncontrado = await resBusca.json();
 
         const confirmar = confirm(`Adicionar "${usuarioEncontrado.nome}" ao evento?`);
-        if (!confirmar) 
+        if (!confirmar)
             return;
 
         const resAdd = await post(`/api/events/${id}/participantes`, { usuario_id: usuarioEncontrado.id });
@@ -79,9 +80,19 @@ export default function EventoPage() {
                 }
             </div>
             <div className='flex-row'>
-                <div class='table-container'>
-                    <h3>Disponibilidade</h3>
-                    <AgendaDisponibilidade evento={evento} id={id} />
+                <div className='agenda-container'>
+                    <div className='flex-row'>
+                        <h3>Disponibilidade</h3>
+                        <label class="seleciona-semanas">
+                            Mostrar 
+                            <input type='number'
+                                value={semanas}
+                                min={1}
+                                onChange={(e) => setSemanas(e.target.value)} />
+                            semanas
+                        </label>
+                    </div>
+                    <AgendaDisponibilidade evento={evento} id={id} semanas={semanas} />
                 </div>
                 <div className="participantes">
                     Participantes:

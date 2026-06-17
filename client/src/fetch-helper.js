@@ -18,3 +18,16 @@ export function post(url, body) {
 
     return fetch(url, opts);
 }
+
+export function del(url, body) {
+    const opts = {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+
+    opts.body = JSON.stringify(body);
+
+    return fetch(url, opts);
+}
